@@ -24,7 +24,7 @@ import {
 import { getTasksForDate, TIME_BLOCK_ORDER, TIME_BLOCK_LABELS, TIME_BLOCK_EMOJIS, TimeBlockKey } from "@/lib/schedule";
 import { Task, TimeBlock, Recurrence } from "@/lib/types";
 
-const MANAGER_PIN = "1234";
+const MANAGER_PIN = "0901";
 const TODAY = format(new Date(), "yyyy-MM-dd");
 const DISPLAY_DATE = format(new Date(), "EEEE, MMMM d, yyyy");
 

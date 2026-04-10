@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { format } from "date-fns";
 import { Check, Lock } from "lucide-react";
 import Link from "next/link";
@@ -23,6 +23,8 @@ export default function HelperPage() {
   const [today] = useState(() => format(new Date(), "yyyy-MM-dd"));
   const [displayDate] = useState(() => format(new Date(), "EEEE, MMMM d"));
   const [displayYear] = useState(() => format(new Date(), "yyyy"));
+  const clapAudioRef = useRef<HTMLAudioElement | null>(null);
+  const wasAllDoneRef = useRef(false);
 
   const loadTasks = useCallback(() => {
     const loaded = getTasksForDate(today);
@@ -31,8 +33,19 @@ export default function HelperPage() {
 
   useEffect(() => {
     setMounted(true);
+    clapAudioRef.current = new Audio("/clap.wav");
     loadTasks();
   }, [loadTasks]);
+
+  // Play clapping sound when all tasks become completed
+  useEffect(() => {
+    if (!mounted || tasks.length === 0) return;
+    const allDone = tasks.every((t) => t.completed);
+    if (allDone && !wasAllDoneRef.current) {
+      clapAudioRef.current?.play().catch(() => {});
+    }
+    wasAllDoneRef.current = allDone;
+  }, [tasks, mounted]);
 
   function handleToggle(taskId: string) {
     toggleCompletion(today, taskId);
